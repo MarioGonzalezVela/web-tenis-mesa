@@ -6,23 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 
-
-class Cart extends Model
+class FavoriteVideos extends Model
 {
     use HasApiTokens, Notifiable;
     protected $fillable = [
-        'product_id',
         'customer_id',
-        'quantity',
+        'location_id',
+        'review',
     ];
-
-    public function product()
-    {
-        return $this->belongsTo(Product::class, 'product_id');
-    }
 
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id');
+    }
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class, 'location_id');
     }
 }
