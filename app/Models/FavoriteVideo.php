@@ -3,12 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
 
 class FavoriteVideo extends Model
 {
-    use HasApiTokens, Notifiable;
     protected $fillable = [
         'customer_id',
         'video_id',

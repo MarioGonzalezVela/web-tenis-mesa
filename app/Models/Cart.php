@@ -3,13 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
-
 
 class Cart extends Model
 {
-    use HasApiTokens, Notifiable;
     protected $fillable = [
         'product_id',
         'customer_id',
