@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\CustomerController;
 use App\Http\Controllers\api\ProductController;
+use App\Http\Controllers\api\CartController;
 
 Route::controller(CustomerController::class)->group(function () {
     Route::get('/customers', "index");
@@ -19,4 +20,13 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/products/{id}', "show");
     Route::put('/products/{id}', "update");
     Route::delete('/products/{id}', "destroy");
+});
+
+Route::controller(CartController::class)->group(function () {
+    Route::get('/cart', 'index');
+    Route::get('/cart/{cartId}', 'show');
+    Route::post('/cart', 'store');
+    Route::post('/cart/{cartId}/add', 'addItem');
+    Route::delete('/cart/{cartId}/remove/{productId}', 'removeItem');
+    Route::put('/cart/{cartId}/update/{productId}', 'updateItem');
 });
