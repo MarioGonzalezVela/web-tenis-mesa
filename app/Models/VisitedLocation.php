@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class FavoriteVideos extends Model
+class VisitedLocation extends Model
 {
     protected $fillable = [
         'customer_id',

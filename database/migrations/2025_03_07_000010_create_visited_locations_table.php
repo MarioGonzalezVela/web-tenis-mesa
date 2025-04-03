@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->foreignId('location_id')->constrained('locations')->onDelete('cascade');
-            $table->timestamp('visited_at')->useCurrent();
+            $table->string('review')->nullable();
             $table->timestamps();
         });
     }
