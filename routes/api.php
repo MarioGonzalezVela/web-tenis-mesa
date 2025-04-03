@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\CustomerController;
 use App\Http\Controllers\api\ProductController;
 use App\Http\Controllers\api\CartController;
+use App\Http\Controllers\api\LocationController;
 
 Route::controller(CustomerController::class)->group(function () {
     Route::get('/customers', "index");
@@ -29,4 +30,12 @@ Route::controller(CartController::class)->group(function () {
     Route::post('/cart/{cartId}/add', 'addItem');
     Route::delete('/cart/{cartId}/remove/{productId}', 'removeItem');
     Route::put('/cart/{cartId}/update/{productId}', 'updateItem');
+});
+
+Route::controller(LocationController::class)->group(function () {
+    Route::get('/locations', "index");
+    Route::post('/locations', "store");
+    Route::get('/locations/{id}', "show");
+    Route::put('/locations/{id}', "update");
+    Route::delete('/locations/{id}', "destroy");
 });
