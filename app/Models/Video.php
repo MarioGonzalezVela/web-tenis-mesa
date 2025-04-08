@@ -10,11 +10,11 @@ class Video extends Model
         'title',
         'link',
         'description',
-        'difficulty',
+        'difficulty'
     ];
 
     public function favoriteVideos()
     {
-        return $this->hasMany(FavoriteVideos::class, 'video_id');
+        return $this->hasMany(FavoriteVideo::class, 'video_id');
     }
 }

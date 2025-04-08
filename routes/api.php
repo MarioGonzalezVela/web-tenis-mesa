@@ -7,6 +7,7 @@ use App\Http\Controllers\api\ProductController;
 use App\Http\Controllers\api\CartController;
 use App\Http\Controllers\api\LocationController;
 use App\Http\Controllers\api\VisitedLocationController;
+use App\Http\Controllers\api\VideoController;
 
 Route::controller(CustomerController::class)->group(function () {
     Route::get('/customers', "index");
@@ -47,4 +48,12 @@ Route::controller(VisitedLocationController::class)->group(function () {
     Route::get('/visited-locations/{id}', "show");
     Route::put('/visited-locations/{id}', "update");
     Route::delete('/visited-locations/{id}', "destroy");
+});
+
+Route::controller(VideoController::class)->group(function () {
+    Route::get('/videos', "index");
+    Route::post('/videos', "store");
+    Route::get('/videos/{id}', "show");
+    Route::put('/videos/{id}', "update");
+    Route::delete('/videos/{id}', "destroy");
 });
