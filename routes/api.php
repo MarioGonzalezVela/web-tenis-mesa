@@ -8,6 +8,7 @@ use App\Http\Controllers\api\CartController;
 use App\Http\Controllers\api\LocationController;
 use App\Http\Controllers\api\VisitedLocationController;
 use App\Http\Controllers\api\VideoController;
+use App\Http\Controllers\api\FavoriteVideoController;
 
 Route::controller(CustomerController::class)->group(function () {
     Route::get('/customers', "index");
@@ -56,4 +57,12 @@ Route::controller(VideoController::class)->group(function () {
     Route::get('/videos/{id}', "show");
     Route::put('/videos/{id}', "update");
     Route::delete('/videos/{id}', "destroy");
+});
+
+Route::controller(FavoriteVideoController::class)->group(function () {
+    Route::get('/favorite-videos', "index");
+    Route::post('/favorite-videos', "store");
+    Route::get('/favorite-videos/{id}', "show");
+    Route::put('/favorite-videos/{id}', "update");
+    Route::delete('/favorite-videos/{id}', "destroy");
 });
