@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\CustomerController;
 use App\Http\Controllers\api\ProductController;
 use App\Http\Controllers\api\CartController;
@@ -9,6 +10,25 @@ use App\Http\Controllers\api\LocationController;
 use App\Http\Controllers\api\VisitedLocationController;
 use App\Http\Controllers\api\VideoController;
 use App\Http\Controllers\api\FavoriteVideoController;
+
+// Autentificación
+
+Route::controller(AuthController::class)->group(function () {
+    Route::post('/register', 'register');
+    Route::post('/login', 'login');
+});
+
+// Rutas protegidas por Sanctum
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+});
+
+
+// Resto de las rutas
 
 Route::controller(CustomerController::class)->group(function () {
     Route::get('/customers', "index");
