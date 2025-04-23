@@ -3,15 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 
-
-class Customer extends Authenticatable
+class Customer extends Model
 {
-    use HasApiTokens, Notifiable;
     protected $fillable = [
+        'id',
         'name',
         'email',
         'password',
@@ -37,7 +33,7 @@ class Customer extends Authenticatable
 
     public function favoriteVideos()
     {
-        return $this->hasMany(FavoriteVideos::class, 'customer_id');
+        return $this->hasMany(FavoriteVideo::class, 'customer_id');
     }
 
     public function visitedLocations()

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Customer;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -23,6 +24,19 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        Customer::create([
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'password' => $user->password,
+            'role' => 'user'
+        ]);
+
+        if (!$user) {
+            return response()->json(['message' => 'Error al crear usuario'], 500);
+        }
+
         return response()->json([
             'message' => 'Usuario registrado con éxito',
         ]);
@@ -52,7 +66,7 @@ class AuthController extends Controller
     {
         $request->user()->tokens()->delete();
         return response()->json([
-            'message' => 'Inicio de sesión cerrada con éxito',
+            'message' => 'Sesión cerrada con éxito',
         ]);
     }
 }
