@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
 use App\Models\User;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Hash;
@@ -31,6 +32,10 @@ class AuthController extends Controller
             'email' => $user->email,
             'password' => $user->password,
             'role' => 'user'
+        ]);
+
+        Cart::create([
+            'customer_id' => $user->id,
         ]);
 
         if (!$user) {
