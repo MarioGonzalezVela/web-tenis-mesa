@@ -46,20 +46,14 @@ Route::controller(ProductController::class)->group(function () {
     Route::delete('/products/{id}', "destroy");
 });
 
-// Rutas de carrito
 Route::controller(CartController::class)->group(function () {
-    Route::get('/carts', "index"); // pública: lista todos los carritos
-    Route::get('/carts/{cartId}', 'show');
-    Route::post('/carts', 'store');
-
-    // Rutas protegidas: requiere autenticación
-    Route::middleware('auth:sanctum')->post('/carts/{cartId}/add', 'addItem');
-    Route::middleware('auth:sanctum')->delete('/carts/{cartId}/remove/{productId}', 'removeItem');
-    Route::middleware('auth:sanctum')->put('/carts/{cartId}/update/{productId}', 'updateItem');
+    Route::get('/carts', "index"); // Pública: lista todos los carritos
+    Route::get('/carts/{cartId}', 'show'); // Pública: obtiene un carrito específico
+    Route::post('/carts', 'store'); // Pública: crea un carrito
+    Route::post('/carts/{cartId}/add', 'addItem'); // Pública: añadir producto
+    Route::delete('/carts/{cartId}/remove/{productId}', 'removeItem'); // Pública: eliminar producto
+    Route::put('/carts/{cartId}/update/{productId}', 'updateItem'); // Pública: actualizar cantidad
 });
-
-// Ruta protegida: obtener el carrito del usuario autenticado
-Route::middleware('auth:sanctum')->get('/user/cart', [CartController::class, 'getUserCart']);
 
 Route::controller(LocationController::class)->group(function () {
     Route::get('/locations', "index");

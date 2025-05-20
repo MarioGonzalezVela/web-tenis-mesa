@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     protected $fillable = [
-        'id',
+        'user_id',
         'name',
         'email',
         'password',
@@ -15,20 +15,26 @@ class Customer extends Model
     ];
 
     protected $hidden = [
-        'remember_token'
+        'remember_token',
     ];
 
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed'
+            'password' => 'hashed',
         ];
     }
 
-    public function carts()
+    // Relación corregida con User
+    public function user()
     {
-        return $this->hasMany(Cart::class, 'customer_id');
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);
     }
 
     public function favoriteVideos()

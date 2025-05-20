@@ -16,57 +16,59 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' =>
-            'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
         ]);
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        Customer::create([
-            'id' => $user->id,
-            'name' => $user->name,
+        // Crear perfil de cliente con el user_id correcto
+        $customer = Customer::create([
+            'user_id' => $user->id,
             'email' => $user->email,
             'password' => $user->password,
-            'role' => 'user'
+            'role' => 'user',
         ]);
 
-        Cart::create([
-            'customer_id' => $user->id,
-        ]);
-
-        if (!$user) {
-            return response()->json(['message' => 'Error al crear usuario'], 500);
-        }
+        // Crear carrito con el customer_id correcto
+        Cart::create(['customer_id' => $customer->id]);
 
         return response()->json([
             'message' => 'Usuario registrado con éxito',
         ]);
     }
+
+
+
     public function login(Request $request)
     {
         $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
+
         $user = User::where('email', $request->email)->first();
-        if (! $user || ! Hash::check(
-            $request->password,
-            $user->password
-        )) {
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
+                'email' => ['Las credenciales son incorrectas.'],
             ]);
         }
+
         $token = $user->createToken('auth_token')->plainTextToken;
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
+            'customer_id' => optional($user->customer)->id, // Ahora devuelve el customer_id correctamente
         ]);
     }
+
+
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();
