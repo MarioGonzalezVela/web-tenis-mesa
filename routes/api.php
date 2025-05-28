@@ -47,12 +47,12 @@ Route::controller(ProductController::class)->group(function () {
 });
 
 Route::controller(CartController::class)->group(function () {
-    Route::get('/carts', "index"); // Pública: lista todos los carritos
-    Route::get('/carts/{cartId}', 'show'); // Pública: obtiene un carrito específico
-    Route::post('/carts', 'store'); // Pública: crea un carrito
-    Route::post('/carts/{cartId}/add', 'addItem'); // Pública: añadir producto
-    Route::delete('/carts/{cartId}/remove/{productId}', 'removeItem'); // Pública: eliminar producto
-    Route::put('/carts/{cartId}/update/{productId}', 'updateItem'); // Pública: actualizar cantidad
+    Route::get('/carts', "index");
+    Route::get('/carts/{cartId}', 'show');
+    Route::post('/carts', 'store');
+    Route::post('/carts/{cartId}/add', 'addItem');
+    Route::delete('/carts/{cartId}/remove/{productId}', 'removeItem');
+    Route::put('/carts/{cartId}/update/{productId}', 'updateItem');
 });
 
 Route::controller(LocationController::class)->group(function () {
@@ -63,12 +63,11 @@ Route::controller(LocationController::class)->group(function () {
     Route::delete('/locations/{id}', "destroy");
 });
 
-Route::controller(VisitedLocationController::class)->group(function () {
-    Route::get('/visited-locations', "index");
+Route::controller(VisitedLocationController::class)->middleware('auth:sanctum')->group(function () {
     Route::post('/visited-locations', "store");
-    Route::get('/visited-locations/{id}', "show");
-    Route::put('/visited-locations/{id}', "update");
-    Route::delete('/visited-locations/{id}', "destroy");
+    Route::get('/visited-locations', "show"); // Locales visitados por el usuario autenticado
+    Route::put('/visited-locations', "update");
+    Route::delete('/visited-locations', "destroy");
 });
 
 Route::controller(VideoController::class)->group(function () {

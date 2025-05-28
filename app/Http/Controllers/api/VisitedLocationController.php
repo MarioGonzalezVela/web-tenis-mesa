@@ -16,61 +16,70 @@ class VisitedLocationController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Listar todos los locales visitados por el usuario autenticado
      */
-    public function index()
+    public function show(Request $request)
     {
-        $visitedLocations = $this->visitedLocation->with(['customer', 'location'])->get();
+        $customerId = $request->user()->customer->id;
+
+        $visitedLocations = $this->visitedLocation
+            ->where('customer_id', $customerId)
+            ->with(['location'])
+            ->get();
+
         return response()->json($visitedLocations, 200);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Marcar un local como visitado por el usuario autenticado
      */
     public function store(Request $request)
     {
         $data = $request->validate([
-            'customer_id' => 'required|exists:customers,id',
             'location_id' => 'required|exists:locations,id',
             'review' => 'nullable|string|max:255',
         ]);
+
+        $data['customer_id'] = $request->user()->customer->id; // Obtiene el customer_id del usuario autenticado
 
         $visitedLocation = $this->visitedLocation->create($data);
-        return response()->json($visitedLocation, 201);
+
+        return response()->json([
+            'message' => 'Local marcado como visitado.',
+            'data' => $visitedLocation->load(['customer', 'location'])
+        ], 201);
     }
 
     /**
-     * Display the specified resource.
+     * Actualizar la reseña de un local visitado por el usuario autenticado
      */
-    public function show(string $id)
+    public function update(Request $request)
     {
-        $visitedLocation = $this->visitedLocation->with(['customer', 'location'])->findOrFail($id);
-        return response()->json($visitedLocation, 200);
-    }
+        $customerId = $request->user()->customer->id;
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
         $data = $request->validate([
-            'customer_id' => 'required|exists:customers,id',
-            'location_id' => 'required|exists:locations,id',
             'review' => 'nullable|string|max:255',
         ]);
 
-        $visitedLocation = $this->visitedLocation->findOrFail($id);
+        $visitedLocation = $this->visitedLocation->where('customer_id', $customerId)->firstOrFail();
         $visitedLocation->update($data);
-        return response()->json($visitedLocation, 200);
+
+        return response()->json([
+            'message' => 'Reseña actualizada con éxito.',
+            'data' => $visitedLocation->load(['location'])
+        ], 200);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Eliminar un local visitado por el usuario autenticado
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        $visitedLocation = $this->visitedLocation->findOrFail($id);
+        $customerId = $request->user()->customer->id;
+
+        $visitedLocation = $this->visitedLocation->where('customer_id', $customerId)->firstOrFail();
         $visitedLocation->delete();
-        return response()->json(null, 204);
+
+        return response()->json(['message' => 'Local eliminado de la lista de visitados'], 200);
     }
 }

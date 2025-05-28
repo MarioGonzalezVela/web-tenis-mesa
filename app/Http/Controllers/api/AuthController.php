@@ -29,6 +29,7 @@ class AuthController extends Controller
         // Crear perfil de cliente con el user_id correcto
         $customer = Customer::create([
             'user_id' => $user->id,
+            'name' => $user->name,
             'email' => $user->email,
             'password' => $user->password,
             'role' => 'user',
