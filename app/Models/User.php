@@ -30,9 +30,8 @@ class User extends Authenticatable
         ];
     }
 
-    // Relación corregida con Customer
     public function customer()
     {
-        return $this->hasOne(Customer::class, 'user_id');
+        return $this->hasOne(Customer::class, 'user_id')->cascadeOnDelete();
     }
 }

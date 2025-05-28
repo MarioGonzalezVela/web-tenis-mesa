@@ -26,7 +26,6 @@ class Customer extends Model
         ];
     }
 
-    // Relación corregida con User
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -34,17 +33,16 @@ class Customer extends Model
 
     public function cart()
     {
-        return $this->hasOne(Cart::class);
+        return $this->hasOne(Cart::class)->cascadeOnDelete();
     }
 
     public function favoriteVideos()
     {
-        return $this->hasMany(FavoriteVideo::class, 'customer_id');
+        return $this->hasMany(FavoriteVideo::class)->cascadeOnDelete();
     }
 
     public function visitedLocations()
     {
-        return $this->belongsToMany(Location::class, 'visited_locations')
-            ->withTimestamps();
+        return $this->hasMany(VisitedLocation::class)->cascadeOnDelete();
     }
 }
