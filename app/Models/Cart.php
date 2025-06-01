@@ -17,6 +17,17 @@ class Cart extends Model
 
     public function cartItems()
     {
-        return $this->hasMany(CartItem::class)->cascadeOnDelete();
+        return $this->hasMany(CartItem::class, 'cart_id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Borramos todos los items del carrito al eliminar el carrito
+
+        static::deleting(function ($cart) {
+            $cart->cartItems()->delete();
+        });
     }
 }

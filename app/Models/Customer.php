@@ -33,16 +33,29 @@ class Customer extends Model
 
     public function cart()
     {
-        return $this->hasOne(Cart::class)->cascadeOnDelete();
+        return $this->hasOne(Cart::class);
     }
 
     public function favoriteVideos()
     {
-        return $this->hasMany(FavoriteVideo::class)->cascadeOnDelete();
+        return $this->hasMany(FavoriteVideo::class, 'customer_id');
     }
 
     public function visitedLocations()
     {
-        return $this->hasMany(VisitedLocation::class)->cascadeOnDelete();
+        return $this->hasMany(VisitedLocation::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Borramos todo lo relacionado con el cliente al eliminarlo
+
+        static::deleting(function ($customer) {
+            $customer->cart()->delete();
+            $customer->favoriteVideos()->delete();
+            $customer->visitedLocations()->delete();
+        });
     }
 }

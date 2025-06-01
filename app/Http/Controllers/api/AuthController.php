@@ -43,8 +43,6 @@ class AuthController extends Controller
         ]);
     }
 
-
-
     public function login(Request $request)
     {
         $request->validate([
@@ -65,7 +63,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
-            'customer_id' => optional($user->customer)->id, // Ahora devuelve el customer_id correctamente
+            'customer_id' => optional($user->customer)->id,
         ]);
     }
 

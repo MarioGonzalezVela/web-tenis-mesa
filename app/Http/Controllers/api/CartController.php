@@ -9,20 +9,20 @@ use App\Models\CartItem;
 
 class CartController extends Controller
 {
-    // Listar todos los carritos (PÚBLICO)
+    // Listar todos los carritos)
     public function index()
     {
         return response()->json(Cart::all(), 200);
     }
 
-    // Obtener carrito específico (PÚBLICO)
+    // Obtener carrito específico
     public function show($cartId)
     {
         $cart = Cart::with('cartItems.product')->findOrFail($cartId);
         return response()->json($cart, 200);
     }
 
-    // Crear un nuevo carrito (PÚBLICO)
+    // Crear un nuevo carrito
     public function store(Request $request)
     {
         $cart = Cart::create([
@@ -31,25 +31,30 @@ class CartController extends Controller
         return response()->json($cart, 201);
     }
 
-    // Añadir un producto al carrito (PÚBLICO)
+    // Añadir un producto al carrito
     public function addItem(Request $request, $cartId)
     {
-        $cart = Cart::findOrFail($cartId);
+        $cart = Cart::find($cartId);
+        if (!$cart) {
+            return response()->json(['error' => 'Carrito no encontrado'], 404);
+        }
 
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1',
-        ]);
+        $existingItem = $cart->cartItems()->where('product_id', $request->product_id)->first();
 
-        $cartItem = $cart->cartItems()->create([
-            'product_id' => $request->product_id,
-            'quantity' => $request->quantity,
-        ]);
+        if ($existingItem) {
+            return response()->json(['error' => 'El producto ya está en el carrito. Usa el botón de + dentro del carrito.'], 400);
+        } else {
+            $cart->cartItems()->create([
+                'product_id' => $request->product_id,
+                'quantity' => 1
+            ]);
+        }
 
-        return response()->json($cartItem, 201);
+        return response()->json($cart->load('cartItems.product')); // Aquí también se corrige la llamada
     }
 
-    // Eliminar un producto del carrito (PÚBLICO)
+
+    // Eliminar un producto del carrito
     public function removeItem($cartId, $productId)
     {
         $cart = Cart::findOrFail($cartId);
@@ -60,7 +65,7 @@ class CartController extends Controller
         return response()->json(['message' => 'Producto eliminado del carrito'], 200);
     }
 
-    // Actualizar cantidad de un producto en el carrito (PÚBLICO)
+    // Actualizar cantidad de un producto en el carrito
     public function updateItem(Request $request, $cartId, $productId)
     {
         $request->validate([
