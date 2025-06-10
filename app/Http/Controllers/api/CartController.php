@@ -50,7 +50,7 @@ class CartController extends Controller
             ]);
         }
 
-        return response()->json($cart->load('cartItems.product')); // Aquí también se corrige la llamada
+        return response()->json($cart->load('cartItems.product'));
     }
 
 

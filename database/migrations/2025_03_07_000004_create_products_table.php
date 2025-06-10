@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('price', 8, 2);
             $table->integer('stock');
             $table->text('description');
-            $table->string('category');
+            $table->enum('category', ['ropa', 'palas', 'gomas', 'mesas', 'extras']);
             $table->timestamps();
         });
     }
